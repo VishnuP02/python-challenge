@@ -16,31 +16,31 @@ with open(budget_csv) as csv_file:
     csv_header = next(csv_file)
     print(f"Header: {csv_header}")
 
-    # Read each column of data after the header
-    for row in csv_reader:
-        
+    # Read each row of data after the header
+    for row in csv_file:
+
         # Append number of months and profit
         Total_Months.append(row[0])
         Total_Profit.append(int(row[1]))
 
     # Calculate monthly change through iteration of profit
-    for i in range(len(Total_Profit)-1):
+    for i in range(len(total_profit)-1):
 
         # Calculate difference
-        Monthly_Profit_Change.append(Total_Profit[i+1]-Total_Profit[i])
+        monthly_profit_change.append(total_profit[i+1]-total_profit[i])
 
 # Max and Min of monthly profit change
-max_increase_value = max(Monthly_Profit_Change)
-max_decrease_value = min(Monthly_Profit_Change)
+max_increase_value = max(monthly_profit_change)
+max_decrease_value = min(monthly_profit_change)
 
-max_increase_month = Monthly_Profit_Change.index(max(Monthly_Profit_Change)) + 1
-max_decrease_month = Monthly_Profit_Change.index(min(Monthly_Profit_Change)) + 1
+max_increase_month = monthly_profit_change.index(max(monthly_profit_change)) + 1
+max_decrease_month = monthly_profit_change.index(min(monthly_profit_change)) + 1
 
 # Statements to be printed
 print("Financial Analysis")
 print("----------------------------")
 print(f"Total Months: {len(Total_Months)}")
-print(f"Total: $ {sum(Total_Profit)}")
-print(f"Average Change: ${round(sum(Monthly_Profit_Change)/len(Monthly_Profit_Change),2)}")
-print(f"Greatest Increase in Profits: {Total_Months[max_increase_month]} (${(str(max_increase_value))})")
-print(f"Greatest Decrease in Profits: {Total_Months[max_decrease_month]} (${(str(max_decrease_value))})")
+print(f"Total: $ {sum(Total_Profit_Losses)}")
+print(f"Average Change: ${round(sum(monthly_profit_change)/len(monthly_profit_change),2)}")
+print(f"Greatest Increase in Profits: {total_months[max_increase_month]} (${(str(max_increase_value))})")
+print(f"Greatest Decrease in Profits: {total_months[max_decrease_month]} (${(str(max_decrease_value))})")
