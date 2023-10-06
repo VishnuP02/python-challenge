@@ -4,9 +4,13 @@ import csv
 budget_csv = os.path.join("PyBank", "Resources", "budget_data.csv")
 
 # Variables
-Total_Months = []
-Total_Profit = []
-Monthly_Profit_Change = []
+Total_Months = 0
+Total_PL = 0
+Previous_PL = 0
+monthly_change = []
+avg_change = 0
+minimum = {"date": "", "amount":0}
+maximum = {"date": "", "amount":0}
 
 # Open and read csv
 with open(budget_csv) as csv_file:
@@ -16,31 +20,43 @@ with open(budget_csv) as csv_file:
     csv_header = next(csv_file)
     print(f"Header: {csv_header}")
 
-    # Read each column of data after the header
-    for row in csv_reader:
+    # Read through each row of data after the header
+    minimum = None
+    maximum = None
+    minimumdate = ""
+    maximumdate = "" 
+    for row_number, row in enumerate(csv_reader):
+        print(row)
+
+        # Calculate the total number of months
+        Total_Months += 1
         
-        # Append number of months and profit
-        Total_Months.append(row[0])
-        Total_Profit.append(int(row[1]))
+        # Calculate the net total amount of "Profit/Losses" over the entire period
+        Total_PL = Total_PL + int(row[1])
 
-    # Calculate monthly change through iteration of profit
-    for i in range(len(Total_Profit)-1):
+        # Calculate the changes in "Profit/Losses" over entire period and then average of the changes
+        current_PL = int(row[1])
+        if row_number > 0:
+            change = current_PL - Previous_PL
+            monthly_change.append(change)
 
-        # Calculate difference
-        Monthly_Profit_Change.append(Total_Profit[i+1]-Total_Profit[i])
+            if (minimum == None) or (change < minimum):
+                minimum = change
+                minimumdate = row[0]
+        
+            if (maximum == None) or (change > maximum):
+                maximum = change
+                maximumdate = row[0]
 
-# Max and Min of monthly profit change
-max_increase_value = max(Monthly_Profit_Change)
-max_decrease_value = min(Monthly_Profit_Change)
-
-max_increase_month = Monthly_Profit_Change.index(max(Monthly_Profit_Change)) + 1
-max_decrease_month = Monthly_Profit_Change.index(min(Monthly_Profit_Change)) + 1
+        Previous_PL = current_PL
+if len(monthly_change) > 0:
+    avg_change = sum(monthly_change) / len(monthly_change)
 
 # Statements to be printed
 print("Financial Analysis")
 print("----------------------------")
-print(f"Total Months: {len(Total_Months)}")
-print(f"Total: $ {sum(Total_Profit)}")
-print(f"Average Change: ${round(sum(Monthly_Profit_Change)/len(Monthly_Profit_Change),2)}")
-print(f"Greatest Increase in Profits: {Total_Months[max_increase_month]} (${(str(max_increase_value))})")
-print(f"Greatest Decrease in Profits: {Total_Months[max_decrease_month]} (${(str(max_decrease_value))})")
+print(f"Total Months: {Total_Months}")
+print(f"Total: $ {Total_PL}")
+print(f"Average Change: $ {avg_change: .2f}")
+print(f"Greatest Increase in Profits: {maximumdate} ({maximum})")
+print(f"Greatest Decrease in Profits: {minimumdate} ({minimum}) ")
