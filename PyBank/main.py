@@ -11,6 +11,7 @@ monthly_change = []
 avg_change = 0
 minimum = {"date": "", "amount":0}
 maximum = {"date": "", "amount":0}
+Output = []
 
 # Open and read csv
 with open(budget_csv) as csv_file:
@@ -53,10 +54,14 @@ if len(monthly_change) > 0:
     avg_change = sum(monthly_change) / len(monthly_change)
 
 # Statements to be printed
-print("Financial Analysis")
-print("----------------------------")
-print(f"Total Months: {Total_Months}")
-print(f"Total: $ {Total_PL}")
-print(f"Average Change: $ {avg_change: .2f}")
-print(f"Greatest Increase in Profits: {maximumdate} ({maximum})")
-print(f"Greatest Decrease in Profits: {minimumdate} ({minimum}) ")
+Output.append("Financial Analysis")
+Output.append("----------------------------")
+Output.append(f"Total Months: {Total_Months}")
+Output.append(f"Total: ${Total_PL}")
+Output.append(f"Average Change: ${avg_change: .2f}")
+Output.append(f"Greatest Increase in Profits: {maximumdate} (${maximum})")
+Output.append(f"Greatest Decrease in Profits: {minimumdate} (${minimum}) ")
+with open('PyBank/analysis/vote_results.txt', 'w') as output_file:
+    for line in Output:
+        print(line)
+        output_file.write(line + "\n")
